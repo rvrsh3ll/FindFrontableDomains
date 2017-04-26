@@ -48,6 +48,8 @@ class ThreadLookup(threading.Thread):
                             print 'Akamai frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'secure.footprint.net' in target:
                             print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)            
+                        elif 'cloudflare' in target:
+                            print 'Cloudflare frontable domain found: ' + str(hostname) + " " + str(target)            
             except:
                 pass
             self.queue.task_done()
