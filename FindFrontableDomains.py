@@ -47,7 +47,9 @@ class ThreadLookup(threading.Thread):
                         elif 'a248.e.akamai.net' in target:
                             print 'Akamai frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'secure.footprint.net' in target:
-                            print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)            
+                            print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)
+                        elif 'fastly' in target:
+                            print 'Fastly URL frontable domain found: ' + str(hostname) + " " + str(target)
             except:
                 pass
             self.queue.task_done()
@@ -69,7 +71,7 @@ def main():
             for d in f:
                 d = d.rstrip()
                 if d:
-                    queue.put(d)          
+                    queue.put(d)
     elif domain:
         subdomains = []
         subdomains = sublist3r.main(domain, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
