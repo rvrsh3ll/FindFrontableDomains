@@ -44,6 +44,8 @@ class ThreadLookup(threading.Thread):
                             print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'aspnetcdn.com' in target:
                             print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
+                        elif 'azureedge.net' in target:
+                            print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'a248.e.akamai.net' in target:
                             print 'Akamai frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'secure.footprint.net' in target:
