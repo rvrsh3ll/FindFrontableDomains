@@ -43,9 +43,11 @@ class ThreadLookup(threading.Thread):
                         elif 'a248.e.akamai.net' in target:
                             print 'Akamai frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'secure.footprint.net' in target:
-                            print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)            
+                            print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'cloudflare' in target:
-                            print 'Cloudflare frontable domain found: ' + str(hostname) + " " + str(target)            
+                            print 'Cloudflare frontable domain found: ' + str(hostname) + " " + str(target)
+                        elif 'unbouncepages.com' in target:
+                            print 'Unbounce frontable domain found: ' + str(hostname) + " " + str(target)
             except Exception as e:
                 pass
             self.queue.task_done()
