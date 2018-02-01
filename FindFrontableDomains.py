@@ -49,6 +49,7 @@ class ThreadLookup(threading.Thread):
                         elif 'unbouncepages.com' in target:
                             print 'Unbounce frontable domain found: ' + str(hostname) + " " + str(target)
                         elif 'x.incapdns.net' in target:
+                            print 'Incapsula frontable domain found: ' +str(hostname) + " " + str(target)
             except Exception as e:
                 pass
             self.queue.task_done()
