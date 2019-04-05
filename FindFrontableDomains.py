@@ -59,9 +59,10 @@ def main():
     parser.add_argument('-f', '--file', type=str, required=False)
     parser.add_argument('-t', '--threads', type=int, required=False, default=10)
     parser.add_argument('-d', '--domain', type=str, required=False)
+    parser.add_argument('-c', '--check', type=str, required=False)
     args = parser.parse_args()
     threads =  args.threads
-
+    check=args.check
     file = args.file
     domain = args.domain
     queue = Queue.Queue()
@@ -70,7 +71,9 @@ def main():
             for d in f:
                 d = d.rstrip()
                 if d:
-                    queue.put(d)          
+                    queue.put(d)   
+    elif check:
+        queue.put(check)       
     elif domain:
         subdomains = []
         subdomains = sublist3r.main(domain, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
