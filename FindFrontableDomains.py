@@ -65,7 +65,7 @@ def main():
     check=args.check
     file = args.file
     domain = args.domain
-    queue = Queue.Queue()
+    queue = queue.Queue()
     if file:
         with open(file, 'r') as f:
             for d in f:
