@@ -91,7 +91,7 @@ def main():
         t.setDaemon(True)
         t.start()
     
-    queue.join()
+    q.join()
     print("")
     print("Search complete!")
 
