@@ -65,21 +65,21 @@ def main():
     check=args.check
     file = args.file
     domain = args.domain
-    queue = queue.Queue()
+    q = queue.Queue()
     if file:
         with open(file, 'r') as f:
             for d in f:
                 d = d.rstrip()
                 if d:
-                    queue.put(d)   
+                    q.put(d)   
     elif check:
-        queue.put(check)       
+        q.put(check)       
     elif domain:
         subdomains = []
         subdomains = sublist3r.main(domain, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
         for i in subdomains:
             print(i)
-            queue.put(i)
+            q.put(i)
     else:
         print("No Input Detected!")
         sys.exit()
@@ -87,7 +87,7 @@ def main():
     print("Starting search for frontable domains...")
     # spawn a pool of threads and pass them queue instance
     for i in range(threads):
-        t = ThreadLookup(queue)
+        t = ThreadLookup(q)
         t.setDaemon(True)
         t.start()
     
