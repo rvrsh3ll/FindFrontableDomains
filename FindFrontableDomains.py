@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Run setup.sh first!
 
 import dns.resolver
 import threading
-import Queue
+import queue
 import argparse
 import sys
 from Sublist3r import sublist3r
@@ -29,27 +29,27 @@ class ThreadLookup(threading.Thread):
                     for j in i.items:
                         target =  j.to_text()
                         if 'cloudfront' in target:
-                            print 'CloundFront Frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("CloundFront Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'appspot.com' in target:
-                            print 'Google Frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Google Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'msecnd.net' in target:
-                            print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'aspnetcdn.com' in target:
-                            print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'azureedge.net' in target:
-                            print 'Azure Frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'a248.e.akamai.net' in target:
-                            print 'Akamai frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Akamai frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'secure.footprint.net' in target:
-                            print 'Level 3 URL frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Level 3 URL frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'cloudflare' in target:
-                            print 'Cloudflare frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Cloudflare frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'unbouncepages.com' in target:
-                            print 'Unbounce frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Unbounce frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'x.incapdns.net' in target:
-                            print 'Incapsula frontable domain found: ' +str(hostname) + " " + str(target)
+                            print("Incapsula frontable domain found: " +str(hostname) + " " + str(target))
                         elif 'fastly' in target:
-                            print 'Fastly URL frontable domain found: ' + str(hostname) + " " + str(target)
+                            print("Fastly URL frontable domain found: " + str(hostname) + " " + str(target))
             except Exception as e:
                 pass
             self.queue.task_done()
@@ -78,13 +78,13 @@ def main():
         subdomains = []
         subdomains = sublist3r.main(domain, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
         for i in subdomains:
-            print i
+            print(i)
             queue.put(i)
     else:
-        print "No Input Detected!"
+        print("No Input Detected!")
         sys.exit()
-    print "---------------------------------------------------------"
-    print "Starting search for frontable domains..."
+    print("---------------------------------------------------------")
+    print("Starting search for frontable domains...")
     # spawn a pool of threads and pass them queue instance
     for i in range(threads):
         t = ThreadLookup(queue)
@@ -92,8 +92,8 @@ def main():
         t.start()
     
     queue.join()
-    print ""
-    print "Search complete!"
+    print("")
+    print("Search complete!")
 
 if __name__ == "__main__":
     main()
