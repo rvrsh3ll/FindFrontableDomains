@@ -65,6 +65,17 @@ def main():
     check=args.check
     file = args.file
     domain = args.domain
+
+    from colorama import init
+    init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
+    from termcolor import cprint 
+    from pyfiglet import figlet_format
+
+    cprint(figlet_format('Find', font='starwars'))
+    cprint(figlet_format('Frontable', font='starwars'))
+    cprint(figlet_format('Domains', font='starwars'))
+
+
     q = queue.Queue()
     if file:
         with open(file, 'r') as f:
@@ -91,7 +102,7 @@ def main():
         t.setDaemon(True)
         t.start()
     
-    queue.join()
+    q.join()
     print("")
     print("Search complete!")
 
