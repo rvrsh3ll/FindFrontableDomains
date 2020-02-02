@@ -5,10 +5,8 @@ Based on information found here: https://www.bamsoftware.com/papers/fronting/
 
 Getting Started:
 
-Run setup.sh
+sudo ./setup.sh
 
-Example Command: ./FindFrontableDomains.py --alexa 10000 --threads 20
+Example Command: python3 FindFrontableDomains.py --domain example.com --threads 20
 
-Example Command: ./FindFrontableDomains.py --domain example.com --threads 20
-
-Example Command: ./FindFrontableDomains.py --check ajax.microsoft.com
+Example Command: python3 FindFrontableDomains.py --check ajax.microsoft.com
