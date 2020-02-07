@@ -71,9 +71,9 @@ def main():
     from termcolor import cprint 
     from pyfiglet import figlet_format
 
-    cprint(figlet_format('Find', font='cybermedium'))
-    cprint(figlet_format('Frontable', font='cybermedium'))
-    cprint(figlet_format('Domains', font='cybermedium'))
+    cprint(figlet_format('Find'))
+    cprint(figlet_format('Frontable'))
+    cprint(figlet_format('Domains'))
 
 
     q = queue.Queue()
