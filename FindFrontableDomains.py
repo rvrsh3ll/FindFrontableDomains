@@ -29,7 +29,7 @@ class ThreadLookup(threading.Thread):
                     for j in i.items:
                         target =  j.to_text()
                         if 'cloudfront' in target:
-                            print("CloundFront Frontable domain found: " + str(hostname) + " " + str(target))
+                            print("CloudFront Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'appspot.com' in target:
                             print("Google Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'msecnd.net' in target:
