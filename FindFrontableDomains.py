@@ -1,12 +1,15 @@
 #!/usr/bin/python3
-# Run setup.sh first!
+#Run setup.sh first!
 
 import dns.resolver
 import threading
 import queue
 import argparse
 import sys
+import sslscan
+import subprocess
 from Sublist3r import sublist3r
+from datetime import datetime
 
 class ThreadLookup(threading.Thread):
     def __init__(self, queue):
@@ -29,14 +32,20 @@ class ThreadLookup(threading.Thread):
                     for j in i.items:
                         target =  j.to_text()
                         if 'cloudfront' in target:
-                            print("CloundFront Frontable domain found: " + str(hostname) + " " + str(target))
-                        elif 'appspot.com' in target:
+                            print("CloudFront Frontable domain found: " + str(hostname) + " " + str(target))
+                        elif 'ghs.googlehosted.com' in target:
                             print("Google Frontable domain found: " + str(hostname) + " " + str(target))
-                        elif 'msecnd.net' in target:
-                            print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
-                        elif 'aspnetcdn.com' in target:
-                            print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
-                        elif 'azureedge.net' in target:
+                        elif 'appspot.com' in target:
+                            print("Appspot (Old) Frontable domain found: " + str(hostname) + " " + str(target))
+                        elif 'aspnetcdn.com' in target or 'azureedge.net' in target or 'msecnd.net' in target :
+                            try:
+                                response=subprocess.getoutput(f'pysslscan scan --scan=protocol.http --scan=server.ciphers --tls10 {str(hostname)} | grep Accepted | wc -l')
+                                if int(response) > 0:
+                                    print("\033[92mAzure Frontable domain found: " + str(hostname) + " " + str(target) + '\033[0m')
+                                    continue
+                            except Exception as e:
+                                print(e)
+                                pass
                             print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
                         elif 'a248.e.akamai.net' in target:
                             print("Akamai frontable domain found: " + str(hostname) + " " + str(target))
@@ -57,14 +66,16 @@ class ThreadLookup(threading.Thread):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', type=str, required=False)
-    parser.add_argument('-t', '--threads', type=int, required=False, default=10)
+    parser.add_argument('-t', '--threads', type=int, required=False, default=20)
     parser.add_argument('-d', '--domain', type=str, required=False)
     parser.add_argument('-c', '--check', type=str, required=False)
+    parser.add_argument('-r', '--recursive', type=str, required=False)
     args = parser.parse_args()
     threads =  args.threads
-    check=args.check
+    check = args.check
     file = args.file
     domain = args.domain
+    recursive = args.recursive
 
     from colorama import init
     init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
@@ -75,7 +86,6 @@ def main():
     cprint(figlet_format('Frontable'))
     cprint(figlet_format('Domains'))
 
-
     q = queue.Queue()
     if file:
         with open(file, 'r') as f:
@@ -83,9 +93,23 @@ def main():
                 d = d.rstrip()
                 if d:
                     q.put(d)   
+    elif recursive:
+        with open('./Subdomains-Found-%s.txt'%datetime.now().strftime('%d-%m-%Y_%H:%M'), 'w') as log:
+            with open(recursive, 'r') as f:
+                for d in f:
+                    d = d.rstrip()
+                    if d:
+                        q.put(d)
+                        subdomains = []
+                        subdomains = sublist3r.main(d, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
+                        for i in subdomains:
+                            log.write(i + '\n')
+                            print(i)
+                            q.put(i)
     elif check:
         q.put(check)       
     elif domain:
+        q.put(domain)
         subdomains = []
         subdomains = sublist3r.main(domain, threads, savefile=None, ports=None, silent=False, verbose=False, enable_bruteforce=False, engines=None)
         for i in subdomains:
