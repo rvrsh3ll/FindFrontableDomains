@@ -7,6 +7,7 @@ import queue
 import argparse
 import sys
 from Sublist3r import sublist3r
+potentially_frontable = []
 
 class ThreadLookup(threading.Thread):
     def __init__(self, queue):
@@ -30,28 +31,40 @@ class ThreadLookup(threading.Thread):
                         target =  j.to_text()
                         if 'cloudfront' in target:
                             print("CloudFront Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))  
                         elif 'appspot.com' in target:
                             print("Google Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                               
                         elif 'msecnd.net' in target:
                             print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'aspnetcdn.com' in target:
                             print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'azureedge.net' in target:
                             print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'azurefd.net' in target:
                             print("Azure Frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                               
                         elif 'a248.e.akamai.net' in target:
                             print("Akamai frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'secure.footprint.net' in target:
                             print("Level 3 URL frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'cloudflare' in target:
                             print("Cloudflare frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'unbouncepages.com' in target:
                             print("Unbounce frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'x.incapdns.net' in target:
                             print("Incapsula frontable domain found: " +str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
                         elif 'fastly' in target:
                             print("Fastly URL frontable domain found: " + str(hostname) + " " + str(target))
+                            potentially_frontable.append(str(hostname))                                
             except Exception as e:
                 pass
             self.queue.task_done()
@@ -62,12 +75,13 @@ def main():
     parser.add_argument('-t', '--threads', type=int, required=False, default=10)
     parser.add_argument('-d', '--domain', type=str, required=False)
     parser.add_argument('-c', '--check', type=str, required=False)
+    parser.add_argument('-o', '--out', type=str, required=False)
     args = parser.parse_args()
     threads =  args.threads
     check=args.check
     file = args.file
     domain = args.domain
-
+    out_file = args.out
     from colorama import init
     init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
     from termcolor import cprint 
@@ -107,6 +121,14 @@ def main():
     q.join()
     print("")
     print("Search complete!")
+    #filter out dupes from the list
+    global potentially_frontable
+    potentially_frontable = list(dict.fromkeys(potentially_frontable))
+    if out_file:
+       with open(out_file, 'w') as file_handle:
+           for domain in potentially_frontable:
+               file_handle.write('%s\n' % domain)
+       
 
 if __name__ == "__main__":
     main()
