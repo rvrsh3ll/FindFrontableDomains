@@ -4,3 +4,4 @@ requests
 pyfiglet
 termcolor
 colorama
+virtualenv
