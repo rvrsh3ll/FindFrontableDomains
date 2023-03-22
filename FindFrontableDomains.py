@@ -115,7 +115,7 @@ def main():
     # spawn a pool of threads and pass them queue instance
     for i in range(threads):
         t = ThreadLookup(q)
-        t.setDaemon(True)
+        t.daemon = True
         t.start()
     
     q.join()
